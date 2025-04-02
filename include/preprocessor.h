@@ -1,12 +1,12 @@
 #pragma once
 #include <bits/stdc++.h>
 
-class Preprocessor
-{
+/**
+ * Preprocesses the source code
+ */
+class Preprocessor {
 public:
-    Preprocessor(const std::string &code);
-    std::string preprocess(); // removes comments and blank lines
+    Preprocessor();
 
-private:
-    std::string code;
+    static std::string preprocess(const std::string &input); // removes comments and blank lines
 };

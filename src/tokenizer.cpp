@@ -1,54 +1,40 @@
 #include "tokenizer.h"
 
-Tokenizer::Tokenizer(std::string code)
-{
+Tokenizer::Tokenizer(const std::string &code) {
     this->code = code;
 }
 
-int Tokenizer::tokenize()
-{
+void Tokenizer::tokenize() {
     std::stringstream stream(code);
-    std::string tok;
-    while (stream >> tok)
-    {
-        if (m.count(tok))
-            tokens.push_back(m.at(tok));
-        else
-        {
-            token tk;
-            int val = convertStrToInt(tok);
-            if (val == -1)
-            {
-                tk.type = token_type::STRING_LITERAL;
-                tk.val_str = tok;
-            }
-            else
-            {
-                tk.type = token_type::INT_LITERAL;
-                tk.val_int = val;
-            }
-            tokens.push_back(tk);
+    std::string token;
+    while (stream >> token) {
+        //if the token is a keyword
+        if (keywords.contains(token)) {
+            tokens.push_back(keywords.at(token));
+            continue;
+        }
+        //if the token isn't a keyword
+        if (const int val = convertStrToInt(token); val == -1) {
+            tokens.push_back({TOKEN_TYPE::STRING_LITERAL, token});
+        } else {
+            tokens.push_back({TOKEN_TYPE::INT_LITERAL, token});
         }
     }
-    return 0;
 }
 
-std::vector<Tokenizer::token> &Tokenizer::get_tokens()
-{
+
+std::vector<Tokenizer::Token> &Tokenizer::get_tokens() {
     return this->tokens;
 }
 
-int Tokenizer::convertStrToInt(std::string str)
-{
-    for (auto ch : str)
-    {
+int Tokenizer::convertStrToInt(const std::string &str) {
+    for (const auto ch: str) {
         if (!isInt(ch))
             return -1;
     }
     return stoi(str);
 }
 
-inline bool Tokenizer::isInt(char ch)
-{
-    return (ch >= '0' && ch <= '9');
+inline bool Tokenizer::isInt(const char ch) {
+    return ch >= '0' && ch <= '9';
 }

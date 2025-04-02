@@ -1,17 +1,10 @@
 #include "preprocessor.h"
 
-Preprocessor::Preprocessor(const std::string &code)
-{
-    this->code = code;
-}
-
-std::string Preprocessor::preprocess()
-{
+std::string Preprocessor::preprocess(const std::string &input) {
     std::string output;
     std::string buffer;
-    std::stringstream stream(this->code);
-    while (!stream.eof())
-    {
+    std::stringstream stream(input);
+    while (!stream.eof()) {
         std::getline(stream, buffer);
         if (buffer.empty())
             continue;

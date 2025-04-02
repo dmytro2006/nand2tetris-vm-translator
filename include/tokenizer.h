@@ -1,11 +1,12 @@
 #pragma once
 #include <bits/stdc++.h>
 
-class Tokenizer
-{
+/**
+ * Generates tokens from the preprocessed source code
+ */
+class Tokenizer {
 public:
-    enum class token_type
-    {
+    enum class TOKEN_TYPE {
         COMMAND,
         OPERATOR,
         SEGMENT,
@@ -19,8 +20,7 @@ public:
         RETURN,
     };
 
-    enum class value
-    {
+    enum class TOKEN_NAME {
         PUSH,
         POP,
         ADD,
@@ -42,74 +42,141 @@ public:
         TEMP,
     };
 
-    struct token
-    {
-        token_type type;
-        value v;
-        std::string val_str;
-        int val_int;
+    struct Token {
+        TOKEN_TYPE type;
+        TOKEN_NAME name;
+        std::string value_str;
+        int value_int;
+
+        Token(const TOKEN_TYPE type, const TOKEN_NAME name) : type(type), name(name), value_int() {
+        };
+
+        Token(const TOKEN_TYPE type): type(type), name(), value_int(0) {
+        };
+
+        Token(const TOKEN_TYPE type, const std::string &value) : type(type), name(), value_str(value), value_int(0) {
+        };
+
+        Token(const TOKEN_TYPE type, const int value) : type(type), name(), value_int(value) {
+        };
     };
 
-    const std::map<std::string, token> m{
-        {"push",
-         {token_type::COMMAND, value::PUSH}},
-        {"pop",
-         {token_type::COMMAND, value::POP}},
-        {"add",
-         {token_type::OPERATOR, value::ADD}},
-        {"sub",
-         {token_type::OPERATOR, value::SUB}},
-        {"neg",
-         {token_type::OPERATOR, value::NEG}},
-        {"eq",
-         {token_type::OPERATOR, value::EQ}},
-        {"gt",
-         {token_type::OPERATOR, value::GT}},
-        {"lt",
-         {token_type::OPERATOR, value::LT}},
-        {"and",
-         {token_type::OPERATOR, value::AND}},
-        {"or",
-         {token_type::OPERATOR, value::OR}},
-        {"not",
-         {token_type::OPERATOR, value::NOT}},
-        {"local",
-         {token_type::SEGMENT, value::LOCAL}},
-        {"argument",
-         {token_type::SEGMENT, value::ARGUMENT}},
-        {"static",
-         {token_type::SEGMENT, value::STATIC}},
-        {"constant",
-         {token_type::SEGMENT, value::CONSTANT}},
-        {"this",
-         {token_type::SEGMENT, value::THIS}},
-        {"that",
-         {token_type::SEGMENT, value::THAT}},
-        {"pointer",
-         {token_type::SEGMENT, value::POINTER}},
-        {"temp",
-         {token_type::SEGMENT, value::TEMP}},
-        {"label",
-         {token_type::LABEL}},
-        {"goto",
-         {token_type::GOTO}},
-        {"if-goto",
-         {token_type::IF_GOTO}},
-        {"call",
-         {token_type::CALL}},
-        {"function",
-         {token_type::FUNCTION}},
-        {"return",
-         {token_type::RETURN}},
+    const std::map<std::string, Token> keywords = {
+        {
+            "push",
+            {TOKEN_TYPE::COMMAND, TOKEN_NAME::PUSH}
+        },
+        {
+            "pop",
+            {TOKEN_TYPE::COMMAND, TOKEN_NAME::POP}
+        },
+        {
+            "add",
+            {TOKEN_TYPE::OPERATOR, TOKEN_NAME::ADD}
+        },
+        {
+            "sub",
+            {TOKEN_TYPE::OPERATOR, TOKEN_NAME::SUB}
+        },
+        {
+            "neg",
+            {TOKEN_TYPE::OPERATOR, TOKEN_NAME::NEG}
+        },
+        {
+            "eq",
+            {TOKEN_TYPE::OPERATOR, TOKEN_NAME::EQ}
+        },
+        {
+            "gt",
+            {TOKEN_TYPE::OPERATOR, TOKEN_NAME::GT}
+        },
+        {
+            "lt",
+            {TOKEN_TYPE::OPERATOR, TOKEN_NAME::LT}
+        },
+        {
+            "and",
+            {TOKEN_TYPE::OPERATOR, TOKEN_NAME::AND}
+        },
+        {
+            "or",
+            {TOKEN_TYPE::OPERATOR, TOKEN_NAME::OR}
+        },
+        {
+            "not",
+            {TOKEN_TYPE::OPERATOR, TOKEN_NAME::NOT}
+        },
+        {
+            "local",
+            {TOKEN_TYPE::SEGMENT, TOKEN_NAME::LOCAL}
+        },
+        {
+            "argument",
+            {TOKEN_TYPE::SEGMENT, TOKEN_NAME::ARGUMENT}
+        },
+        {
+            "static",
+            {TOKEN_TYPE::SEGMENT, TOKEN_NAME::STATIC}
+        },
+        {
+            "constant",
+            {TOKEN_TYPE::SEGMENT, TOKEN_NAME::CONSTANT}
+        },
+        {
+            "this",
+            {TOKEN_TYPE::SEGMENT, TOKEN_NAME::THIS}
+        },
+        {
+            "that",
+            {TOKEN_TYPE::SEGMENT, TOKEN_NAME::THAT}
+        },
+        {
+            "pointer",
+            {TOKEN_TYPE::SEGMENT, TOKEN_NAME::POINTER}
+        },
+        {
+            "temp",
+            {TOKEN_TYPE::SEGMENT, TOKEN_NAME::TEMP}
+        },
+        {
+            "label",
+            {TOKEN_TYPE::LABEL}
+        },
+        {
+            "goto",
+            {TOKEN_TYPE::GOTO}
+        },
+        {
+            "if-goto",
+            {TOKEN_TYPE::IF_GOTO}
+        },
+        {
+            "call",
+            {TOKEN_TYPE::CALL}
+        },
+        {
+            "function",
+            {TOKEN_TYPE::FUNCTION}
+        },
+        {
+            "return",
+            {TOKEN_TYPE::RETURN}
+        },
     };
 
-    Tokenizer(std::string code);
-    int tokenize();
-    std::vector<token> &get_tokens();
+    Tokenizer(const std::string &code);
+
+    /* Tokenizes the source code */
+    void tokenize();
+
+    /* Returns vector of tokens */
+    std::vector<Token> &get_tokens();
 
 private:
     std::string code;
-    std::vector<token> tokens;
-    int convertStrToInt(std::string str);
+    std::vector<Token> tokens;
+
+    int convertStrToInt(const std::string &str);
+
     inline bool isInt(char ch);
 };
