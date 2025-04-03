@@ -10,30 +10,30 @@ public:
     // Code for system initialization and calling Sys.init()
     static std::string initialization_code;
 
-    Compiler(const std::vector<Tokenizer::Token> &tokens, const std::string &className);
+    Compiler(const std::vector<Token> &tokens, const std::string &className);
 
     int compile();
 
     std::string &getOutput();
 
-    const std::map<Tokenizer::TOKEN_NAME, std::string(Compiler::*)() const> operator_code{
-        {Tokenizer::TOKEN_NAME::ADD, Compiler::parseAdd},
-        {Tokenizer::TOKEN_NAME::SUB, Compiler::parseSub},
-        {Tokenizer::TOKEN_NAME::NEG, Compiler::parseNeg},
-        {Tokenizer::TOKEN_NAME::EQ, Compiler::parseEq},
-        {Tokenizer::TOKEN_NAME::GT, Compiler::parseGt},
-        {Tokenizer::TOKEN_NAME::LT, Compiler::parseLt},
-        {Tokenizer::TOKEN_NAME::AND, Compiler::parseAnd},
-        {Tokenizer::TOKEN_NAME::OR, Compiler::parseOr},
-        {Tokenizer::TOKEN_NAME::NOT, Compiler::parseNot}
+    const std::map<TOKEN_NAME, std::string(Compiler::*)() const> operator_code{
+        {TOKEN_NAME::ADD, Compiler::parseAdd},
+        {TOKEN_NAME::SUB, Compiler::parseSub},
+        {TOKEN_NAME::NEG, Compiler::parseNeg},
+        {TOKEN_NAME::EQ, Compiler::parseEq},
+        {TOKEN_NAME::GT, Compiler::parseGt},
+        {TOKEN_NAME::LT, Compiler::parseLt},
+        {TOKEN_NAME::AND, Compiler::parseAnd},
+        {TOKEN_NAME::OR, Compiler::parseOr},
+        {TOKEN_NAME::NOT, Compiler::parseNot}
     };
 
 private:
-    [[nodiscard]] std::string command(Tokenizer::TOKEN_NAME token_val, Tokenizer::TOKEN_NAME segment, int index) const;
+    [[nodiscard]] std::string command(TOKEN_NAME token_val, TOKEN_NAME segment, int index) const;
 
-    std::string oper(Tokenizer::TOKEN_NAME token_val);
+    std::string oper(TOKEN_NAME token_val);
 
-    std::vector<Tokenizer::Token> tokens;
+    std::vector<Token> tokens;
     std::string className;
     std::string output;
 
@@ -55,9 +55,9 @@ private:
 
     [[nodiscard]] std::string parseNot() const;
 
-    [[nodiscard]] std::string parsePush(Tokenizer::TOKEN_NAME segment, int index) const;
+    [[nodiscard]] std::string parsePush(TOKEN_NAME segment, int index) const;
 
-    [[nodiscard]] std::string parsePop(Tokenizer::TOKEN_NAME segment, int index) const;
+    [[nodiscard]] std::string parsePop(TOKEN_NAME segment, int index) const;
 
     [[nodiscard]] std::string parseLabel(const std::string &label) const;
 

@@ -1,4 +1,5 @@
 #include "tokenizer.h"
+#include <sstream>
 
 Tokenizer::Tokenizer(const std::string &code) {
     this->code = code;
@@ -23,7 +24,7 @@ void Tokenizer::tokenize() {
 }
 
 
-std::vector<Tokenizer::Token> &Tokenizer::get_tokens() {
+std::vector<Token> &Tokenizer::get_tokens() {
     return this->tokens;
 }
 

@@ -50,7 +50,7 @@ std::string Compiler::initialization_code =
         "0;JMP\n"
         "(Sys.init.return)\n";
 
-Compiler::Compiler(const std::vector<Tokenizer::Token> &tokens, const std::string &className) {
+Compiler::Compiler(const std::vector<Token> &tokens, const std::string &className) {
     this->tokens = tokens;
     this->className = className;
 }
@@ -62,93 +62,93 @@ std::string &Compiler::getOutput() {
 int Compiler::compile() {
     for (int i = 0; i < tokens.size(); i++) {
         switch (tokens[i].type) {
-            case Tokenizer::TOKEN_TYPE::COMMAND:
+            case TOKEN_TYPE::COMMAND:
                 if (i + 2 >= tokens.size()) {
-                    std::cerr << "ERROR: Not enough arguments for " << (tokens[i].name == Tokenizer::TOKEN_NAME::PUSH
+                    std::cerr << "ERROR: Not enough arguments for " << (tokens[i].name == TOKEN_NAME::PUSH
                                                                             ? "PUSH"
                                                                             : "POP") << std::endl;
                     return 1;
                 }
-                if (tokens[i + 1].type == Tokenizer::TOKEN_TYPE::SEGMENT && tokens[i + 2].type ==
-                    Tokenizer::TOKEN_TYPE::INT_LITERAL)
+                if (tokens[i + 1].type == TOKEN_TYPE::SEGMENT && tokens[i + 2].type ==
+                    TOKEN_TYPE::INT_LITERAL)
                     output += command(tokens[i].name, tokens[i + 1].name, tokens[i + 2].value_int);
                 else {
-                    std::cerr << "ERROR: Invalid arguments for " << (tokens[i].name == Tokenizer::TOKEN_NAME::PUSH
+                    std::cerr << "ERROR: Invalid arguments for " << (tokens[i].name == TOKEN_NAME::PUSH
                                                                          ? "PUSH"
                                                                          : "POP") << std::endl;
                     return 1;
                 }
                 break;
-            case Tokenizer::TOKEN_TYPE::OPERATOR:
+            case TOKEN_TYPE::OPERATOR:
                 output += oper(tokens[i].name);
                 break;
-            case Tokenizer::TOKEN_TYPE::SEGMENT:
-            case Tokenizer::TOKEN_TYPE::INT_LITERAL:
-            case Tokenizer::TOKEN_TYPE::STRING_LITERAL:
+            case TOKEN_TYPE::SEGMENT:
+            case TOKEN_TYPE::INT_LITERAL:
+            case TOKEN_TYPE::STRING_LITERAL:
                 break;
-            case Tokenizer::TOKEN_TYPE::LABEL:
+            case TOKEN_TYPE::LABEL:
                 if (i + 1 >= tokens.size()) {
                     std::cerr << "ERROR: Not enough arguments for LABEL" << std::endl;
                     return 1;
                 }
-                if (tokens[i + 1].type == Tokenizer::TOKEN_TYPE::STRING_LITERAL)
+                if (tokens[i + 1].type == TOKEN_TYPE::STRING_LITERAL)
                     output += parseLabel(tokens[i + 1].value_str);
                 else {
                     std::cerr << "ERROR: Invalid arguments for LABEL" << std::endl;
                     return 1;
                 }
                 break;
-            case Tokenizer::TOKEN_TYPE::GOTO:
+            case TOKEN_TYPE::GOTO:
                 if (i + 1 >= tokens.size()) {
                     std::cerr << "ERROR: Not enough arguments for GOTO" << std::endl;
                     return 1;
                 }
-                if (tokens[i + 1].type == Tokenizer::TOKEN_TYPE::STRING_LITERAL)
+                if (tokens[i + 1].type == TOKEN_TYPE::STRING_LITERAL)
                     output += parseGoto(tokens[i + 1].value_str);
                 else {
                     std::cerr << "ERROR: Invalid arguments for GOTO" << std::endl;
                     return 1;
                 }
                 break;
-            case Tokenizer::TOKEN_TYPE::IF_GOTO:
+            case TOKEN_TYPE::IF_GOTO:
                 if (i + 1 >= tokens.size()) {
                     std::cerr << "ERROR: Not enough arguments for IF-GOTO" << std::endl;
                     return 1;
                 }
-                if (tokens[i + 1].type == Tokenizer::TOKEN_TYPE::STRING_LITERAL)
+                if (tokens[i + 1].type == TOKEN_TYPE::STRING_LITERAL)
                     output += parseIfGoto(tokens[i + 1].value_str);
                 else {
                     std::cerr << "ERROR: Invalid arguments for IF-GOTO" << std::endl;
                     return 1;
                 }
                 break;
-            case Tokenizer::TOKEN_TYPE::FUNCTION:
+            case TOKEN_TYPE::FUNCTION:
                 if (i + 2 >= tokens.size()) {
                     std::cerr << "ERROR: Not enough arguments for FUNCTION" << std::endl;
                     return 1;
                 }
-                if (tokens[i + 1].type == Tokenizer::TOKEN_TYPE::STRING_LITERAL && tokens[i + 2].type ==
-                    Tokenizer::TOKEN_TYPE::INT_LITERAL)
+                if (tokens[i + 1].type == TOKEN_TYPE::STRING_LITERAL && tokens[i + 2].type ==
+                    TOKEN_TYPE::INT_LITERAL)
                     output += parseFunction(tokens[i + 1].value_str, tokens[i + 2].value_int);
                 else {
                     std::cerr << "ERROR: Invalid arguments for FUNCTION" << std::endl;
                     return 1;
                 }
                 break;
-            case Tokenizer::TOKEN_TYPE::CALL:
+            case TOKEN_TYPE::CALL:
                 if (i + 2 >= tokens.size()) {
                     std::cerr << "ERROR: Not enough arguments for CALL" << std::endl;
                     return 1;
                 }
-                if (tokens[i + 1].type == Tokenizer::TOKEN_TYPE::STRING_LITERAL && tokens[i + 2].type ==
-                    Tokenizer::TOKEN_TYPE::INT_LITERAL)
+                if (tokens[i + 1].type == TOKEN_TYPE::STRING_LITERAL && tokens[i + 2].type ==
+                    TOKEN_TYPE::INT_LITERAL)
                     output += parseCall(tokens[i + 1].value_str, tokens[i + 2].value_int);
                 else {
                     std::cerr << "ERROR: Invalid arguments for CALL" << std::endl;
                     return 1;
                 }
                 break;
-            case Tokenizer::TOKEN_TYPE::RETURN:
+            case TOKEN_TYPE::RETURN:
                 output += parseReturn();
                 break;
         }
@@ -156,19 +156,19 @@ int Compiler::compile() {
     return 0;
 }
 
-std::string Compiler::command(const Tokenizer::TOKEN_NAME token_val, const Tokenizer::TOKEN_NAME segment,
+std::string Compiler::command(const TOKEN_NAME token_val, const TOKEN_NAME segment,
                               const int index) const {
     switch (token_val) {
-        case Tokenizer::TOKEN_NAME::PUSH:
+        case TOKEN_NAME::PUSH:
             return parsePush(segment, index);
-        case Tokenizer::TOKEN_NAME::POP:
+        case TOKEN_NAME::POP:
             return parsePop(segment, index);
         default:
             return {};
     }
 }
 
-inline std::string Compiler::oper(const Tokenizer::TOKEN_NAME token_val) {
+inline std::string Compiler::oper(const TOKEN_NAME token_val) {
     return (this->*operator_code.at(token_val))();
 }
 
@@ -378,15 +378,15 @@ std::string Compiler::parseNot() const {
            "M=D\n";
 }
 
-std::string Compiler::parsePush(const Tokenizer::TOKEN_NAME segment, const int index) const {
+std::string Compiler::parsePush(const TOKEN_NAME segment, const int index) const {
     std::string output;
     switch (segment) {
-        case Tokenizer::TOKEN_NAME::CONSTANT:
+        case TOKEN_NAME::CONSTANT:
             output += "@" + std::to_string(index) +
                     '\n' +
                     "D=A\n";
             break;
-        case Tokenizer::TOKEN_NAME::LOCAL:
+        case TOKEN_NAME::LOCAL:
             output += "@" + std::to_string(index) +
                     '\n' +
                     "D=A\n"
@@ -394,7 +394,7 @@ std::string Compiler::parsePush(const Tokenizer::TOKEN_NAME segment, const int i
                     "A=D+M\n"
                     "D=M\n";
             break;
-        case Tokenizer::TOKEN_NAME::ARGUMENT:
+        case TOKEN_NAME::ARGUMENT:
             output += "@" + std::to_string(index) +
                     '\n' +
                     "D=A\n"
@@ -402,12 +402,12 @@ std::string Compiler::parsePush(const Tokenizer::TOKEN_NAME segment, const int i
                     "A=D+M\n"
                     "D=M\n";
             break;
-        case Tokenizer::TOKEN_NAME::STATIC:
+        case TOKEN_NAME::STATIC:
             output += "@" + className + "." + std::to_string(index) +
                     '\n' +
                     "D=M\n";
             break;
-        case Tokenizer::TOKEN_NAME::THIS:
+        case TOKEN_NAME::THIS:
             output += "@" + std::to_string(index) +
                     '\n' +
                     "D=A\n"
@@ -415,7 +415,7 @@ std::string Compiler::parsePush(const Tokenizer::TOKEN_NAME segment, const int i
                     "A=D+M\n"
                     "D=M\n";
             break;
-        case Tokenizer::TOKEN_NAME::THAT:
+        case TOKEN_NAME::THAT:
             output += "@" + std::to_string(index) +
                     '\n' +
                     "D=A\n"
@@ -423,12 +423,12 @@ std::string Compiler::parsePush(const Tokenizer::TOKEN_NAME segment, const int i
                     "A=D+M\n"
                     "D=M\n";
             break;
-        case Tokenizer::TOKEN_NAME::POINTER:
+        case TOKEN_NAME::POINTER:
             output += "@" + std::to_string(index + 3) +
                     '\n' +
                     "D=M\n";
             break;
-        case Tokenizer::TOKEN_NAME::TEMP:
+        case TOKEN_NAME::TEMP:
             output += "@" + std::to_string(index + 5) +
                     '\n' +
                     "D=M\n";
@@ -441,12 +441,12 @@ std::string Compiler::parsePush(const Tokenizer::TOKEN_NAME segment, const int i
            "M=D\n";
 }
 
-std::string Compiler::parsePop(const Tokenizer::TOKEN_NAME segment, const int index) const {
+std::string Compiler::parsePop(const TOKEN_NAME segment, const int index) const {
     switch (segment) {
-        case Tokenizer::TOKEN_NAME::CONSTANT:
+        case TOKEN_NAME::CONSTANT:
             std::cerr << "ERROR: Can't pop to constant" << std::endl;
             return "\n";
-        case Tokenizer::TOKEN_NAME::LOCAL:
+        case TOKEN_NAME::LOCAL:
             return "@LCL\n"
                    "D=M\n"
                    "@" +
@@ -462,7 +462,7 @@ std::string Compiler::parsePop(const Tokenizer::TOKEN_NAME segment, const int in
                    "A=A+1\n"
                    "A=M\n"
                    "M=D\n";
-        case Tokenizer::TOKEN_NAME::ARGUMENT:
+        case TOKEN_NAME::ARGUMENT:
             return "@ARG\n"
                    "D=M\n"
                    "@" +
@@ -478,7 +478,7 @@ std::string Compiler::parsePop(const Tokenizer::TOKEN_NAME segment, const int in
                    "A=A+1\n"
                    "A=M\n"
                    "M=D\n";
-        case Tokenizer::TOKEN_NAME::STATIC:
+        case TOKEN_NAME::STATIC:
             return "@SP\n"
                    "M=M-1\n"
                    "A=M\n"
@@ -487,7 +487,7 @@ std::string Compiler::parsePop(const Tokenizer::TOKEN_NAME segment, const int in
                    className + "." + std::to_string(index) +
                    '\n' +
                    "M=D\n";
-        case Tokenizer::TOKEN_NAME::THIS:
+        case TOKEN_NAME::THIS:
             return "@THIS\n"
                    "D=M\n"
                    "@" +
@@ -503,7 +503,7 @@ std::string Compiler::parsePop(const Tokenizer::TOKEN_NAME segment, const int in
                    "A=A+1\n"
                    "A=M\n"
                    "M=D\n";
-        case Tokenizer::TOKEN_NAME::THAT:
+        case TOKEN_NAME::THAT:
             return "@THAT\n"
                    "D=M\n"
                    "@" +
@@ -519,7 +519,7 @@ std::string Compiler::parsePop(const Tokenizer::TOKEN_NAME segment, const int in
                    "A=A+1\n"
                    "A=M\n"
                    "M=D\n";
-        case Tokenizer::TOKEN_NAME::POINTER:
+        case TOKEN_NAME::POINTER:
             return "@SP\n"
                    "M=M-1\n"
                    "A=M\n"
@@ -528,7 +528,7 @@ std::string Compiler::parsePop(const Tokenizer::TOKEN_NAME segment, const int in
                    std::to_string(index + 3) +
                    '\n' +
                    "M=D\n";
-        case Tokenizer::TOKEN_NAME::TEMP:
+        case TOKEN_NAME::TEMP:
             return "@SP\n"
                    "M=M-1\n"
                    "A=M\n"
@@ -589,7 +589,7 @@ std::string Compiler::parseCall(const std::string &name, int nArgs) const {
     n++;
     std::string output;
     if (nArgs < 1) {
-        output += parsePush(Tokenizer::TOKEN_NAME::CONSTANT, 0);
+        output += parsePush(TOKEN_NAME::CONSTANT, 0);
         nArgs = 1;
     }
     output += "@" + className + ".return." + std::to_string(n) +
