@@ -1,5 +1,15 @@
-#pragma once
-#include <bits/stdc++.h>
+//
+// file.h
+// All functions for handling files
+// Created by dmytro2006 on 10/11/2024.
+//
+
+#ifndef FILE_H
+#define FILE_H
+
+#include <string>
+#include <filesystem>
+#include <fstream>
 
 enum class file_type {
     INPUT,
@@ -23,7 +33,7 @@ public:
 
     void write(const std::string &output);
 
-    std::string getNameWithoutExtension() const;
+    std::string get_name_without_extension() const;
 
 private:
     std::fstream file;
@@ -32,3 +42,4 @@ private:
 
     void close();
 };
+#endif // FILE_H

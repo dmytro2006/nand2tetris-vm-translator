@@ -1,4 +1,6 @@
 //
+// initialization.h
+// Code for system initialization and calling Sys.init()
 // Created by dmytro2006 on 03/04/2025.
 //
 
@@ -7,7 +9,6 @@
 
 #include "translator.h"
 
-// Code for system initialization and calling Sys.init()
 std::string Translator::initialization_code =
         "@256\n"
         "D=A\n"

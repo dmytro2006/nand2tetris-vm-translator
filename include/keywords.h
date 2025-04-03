@@ -1,4 +1,6 @@
 //
+// keyword.h
+// Keyword map
 // Created by dmytro2006 on 03/04/2025.
 //
 

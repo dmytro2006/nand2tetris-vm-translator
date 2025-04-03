@@ -19,7 +19,7 @@ std::vector<Token> &Translator::get_tokens() {
     return tokens;
 }
 
-// Removes comments and blank lines. Returns non-zero value in case of errors
+// Remove comments and blank lines. Returns non-zero value in case of errors
 int Translator::preprocess() {
     std::string output;
     std::string buffer;
@@ -34,7 +34,8 @@ int Translator::preprocess() {
     return 0;
 }
 
-bool Translator::isInt(const std::string &str) {
+// Check if string is an integer
+bool Translator::is_int(const std::string &str) {
     for (const auto ch: str) {
         if (!(ch >= '0' && ch <= '9'))
             return false;
@@ -42,6 +43,7 @@ bool Translator::isInt(const std::string &str) {
     return true;
 }
 
+// Convert code in tokens
 int Translator::tokenize() {
     std::stringstream stream(input_code);
     std::string token;
@@ -52,7 +54,7 @@ int Translator::tokenize() {
             continue;
         }
         //if the token isn't a keyword
-        if (isInt(token)) {
+        if (is_int(token)) {
             tokens.push_back({TOKEN_TYPE::STRING_LITERAL, token});
         } else {
             tokens.push_back({TOKEN_TYPE::INT_LITERAL, token});
@@ -61,6 +63,7 @@ int Translator::tokenize() {
     return 0;
 }
 
+// Translate tokens in assembler code
 int Translator::translate() {
     for (int i = 0; i < tokens.size(); i++) {
         switch (tokens[i].type) {

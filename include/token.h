@@ -1,6 +1,6 @@
 //
 // token.h
-// Token structure fot the translator
+// Token structure for the translator
 // Created by dmytro2006 on 03/04/2025.
 //
 

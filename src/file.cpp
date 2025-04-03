@@ -17,11 +17,11 @@ File::~File() {
 bool File::open() {
     if (type == file_type::INPUT) {
         this->file.open(path, std::ios_base::in);
-        return file.good();
+        return file.is_open();
     }
     if (type == file_type::OUTPUT) {
         this->file.open(path, std::ios_base::out);
-        return file.good();
+        return file.is_open();
     }
     return false;
 }
@@ -44,7 +44,7 @@ void File::write(const std::string &output) {
     this->file << output;
 }
 
-std::string File::getNameWithoutExtension() const {
+std::string File::get_name_without_extension() const {
     std::string path_string = path.string();
     path_string = path_string.substr(0, path_string.find_last_of('.'));
     return path_string.substr(path_string.find_last_of("\\/") + 1);

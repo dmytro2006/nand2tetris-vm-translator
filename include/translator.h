@@ -1,4 +1,6 @@
 //
+// translator.h
+// All functions for translating vm code to assembler
 // Created by dmytro2006 on 03/04/2025.
 //
 
@@ -39,7 +41,7 @@ private:
     std::string output_code;
     std::string class_name;
 
-    bool isInt(const std::string &str);
+    bool is_int(const std::string &str);
 
     // Parsing functions
     [[nodiscard]] std::string command(TOKEN_NAME name, TOKEN_NAME segment, const std::string &index) const;
