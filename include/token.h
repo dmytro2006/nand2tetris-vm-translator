@@ -47,19 +47,15 @@ enum class TOKEN_NAME {
 struct Token {
     TOKEN_TYPE type;
     TOKEN_NAME name;
-    std::string value_str;
-    int value_int;
+    std::string value;
 
-    Token(const TOKEN_TYPE type, const TOKEN_NAME name) : type(type), name(name), value_int() {
+    Token(const TOKEN_TYPE type, const TOKEN_NAME name) : type(type), name(name) {
     };
 
-    Token(const TOKEN_TYPE type): type(type), name(), value_int(0) {
+    Token(const TOKEN_TYPE type): type(type), name() {
     };
 
-    Token(const TOKEN_TYPE type, const std::string &value) : type(type), name(), value_str(value), value_int(0) {
-    };
-
-    Token(const TOKEN_TYPE type, const int value) : type(type), name(), value_int(value) {
+    Token(const TOKEN_TYPE type, const std::string &value) : type(type), name(), value(value) {
     };
 };
 
